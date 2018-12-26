@@ -1,6 +1,16 @@
+
+
 # vue-todo
 
-> A Vue.js project
+A Vue.js project
+
+vue installation
+
+npm install -g vue-cli
+
+vue init webpack vue-todo
+
+npm install sass-loader node-sass --save
 
 ## Build Setup
 
