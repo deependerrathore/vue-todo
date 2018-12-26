@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="extra-container">
-            <div><label for="all"><input type="checkbox"/>Check All</label></div>
+            <div><label for="all"><input v-bind:checked="!anyRemaining" type="checkbox" @change="checkAllTodos"/>Check All</label></div>
             <div>{{ remaining }} Items left</div>
         </div>
     </div>
@@ -69,12 +69,20 @@ export default {
     cancelEdit:function(todo){
         todo.title= this.beforeEditCache;
         todo.editing = false;
+    },
+    checkAllTodos:function(){
+        this.todos.forEach(todo => {
+            todo.completed=event.target.checked;
+        });
     }
   },
   computed: {
         remaining:function(){
             return this.todos.filter(todo=> !todo.completed).length;
-        }   
+        },
+        anyRemaining:function(){
+            return this.remaining != 0;
+        } 
   }
 }
 </script>
