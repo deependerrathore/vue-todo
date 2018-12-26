@@ -11,6 +11,10 @@
                 &times;
             </div>
         </div>
+        <div class="extra-container">
+            <div><label for="all"><input type="checkbox"/>Check All</label></div>
+            <div>{{ remaining }} Items left</div>
+        </div>
     </div>
 </template>
 
@@ -23,7 +27,7 @@ export default {
       idForTodo:3,
       beforeEditCache:'',
       todos:[
-            {'id':1,'title':'Finish Vue Screencast','completed':true,'editing':false},
+            {'id':1,'title':'Finish Vue Screencast','completed':false,'editing':false},
             {'id':2,'title':'Anhilation','completed':false,'editing':false}
 
       ]
@@ -66,6 +70,11 @@ export default {
         todo.title= this.beforeEditCache;
         todo.editing = false;
     }
+  },
+  computed: {
+        remaining:function(){
+            return this.todos.filter(todo=> !todo.completed).length;
+        }   
   }
 }
 </script>
@@ -116,6 +125,29 @@ export default {
 .completed{
     text-decoration: line-through;
     color: grey;
+}
+.extra-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    border-top: 1px solid lightgrey;
+    padding-top: 14px;
+    margin-bottom: 14px;
+}
+button{
+    font-size: 14px;
+    background-color: white;
+    appearance: none;
+    &:hover{
+        background: lightgreen;
+    }
+    &:focus{
+        outline: none;
+    }
+}
+.active{
+    background:lightgreen;
 }
 </style>
 
