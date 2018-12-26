@@ -1,8 +1,13 @@
 <template>
     <div>
         <input type="text" class="todo-input" v-model="newTodo" v-on:keyup.enter="addTodo" placeholder="What needs to be done?"/>
-        <div v-for="todo in todos" :key="todo.id" class="todo-item">
-            {{todo.title}}
+        <div v-for="(todo,index) in todos" :key="todo.id" class="todo-item">
+            <div>
+                {{todo.title}}
+            </div>
+            <div class="remove-item" v-on:click="removeTodo(index)">
+                &times;
+            </div>
         </div>
     </div>
 </template>
@@ -31,6 +36,9 @@ export default {
           });
           this.newTodo='';
           this.idForTodo++;
+      },
+      removeTodo:function(index){
+          this.todos.splice(index,1);
       }
   }
 }
@@ -48,7 +56,17 @@ export default {
     }
 }
 .todo-item{
-    text-align: left;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.remove-item{
+    cursor: pointer;
+    margin-left: 14px;
+    &:hover{
+        color: black;
+    }
 }
 </style>
 
