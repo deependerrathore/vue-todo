@@ -2,8 +2,10 @@
     <div>
         <input type="text" class="todo-input" v-model="newTodo" v-on:keyup.enter="addTodo" placeholder="What needs to be done?"/>
         <div v-for="(todo,index) in todos" :key="todo.id" class="todo-item">
-            <div>
-                {{todo.title}}
+            <div class="todo-item-left">
+                <input type="checkbox" v-model="todo.completed">
+                <div v-if="!todo.editing" v-on:dblclick="editTodo(todo)" class="todo-item-label" v-bind:class="{completed : todo.completed}">{{todo.title}}</div>
+                <div v-else><input  class="todo-item-edit" v-focus v-on:blur="doneEdit(todo)"  v-on:keyup.enter="doneEdit(todo)" v-on:keyup.esc="cancelEdit(todo)" type="text" v-model="todo.title"></div>
             </div>
             <div class="remove-item" v-on:click="removeTodo(index)">
                 &times;
@@ -18,12 +20,21 @@ export default {
   data () {
     return {
       newTodo: '',
+      idForTodo:3,
+      beforeEditCache:'',
       todos:[
-            {'id':1,'title':'Finish Vue Screencast','completed':false},
-            {'id':2,'title':'Anhilation','completed':false}
+            {'id':1,'title':'Finish Vue Screencast','completed':true,'editing':false},
+            {'id':2,'title':'Anhilation','completed':false,'editing':false}
 
       ]
     }
+  },
+  directives:{
+        focus:{
+            inserted:function(el){
+                el.focus();
+            }
+        }
   },
   methods:{
       
@@ -32,14 +43,29 @@ export default {
             return
         }
           this.todos.push({
-              'id':this.idForTodo,'title':this.newTodo,'completed':false
+              'id':this.idForTodo,'title':this.newTodo,'completed':false,'editing':false
           });
           this.newTodo='';
           this.idForTodo++;
       },
       removeTodo:function(index){
           this.todos.splice(index,1);
-      }
+      },
+      editTodo:function(todo){
+          this.beforeEditCache = todo.title;
+          todo.editing= true;
+     },
+     doneEdit(todo){
+        if(todo.title.trim().length == 0){
+            todo.title = this.beforeEditCache;
+        }
+        todo.editing= false;
+
+    },
+    cancelEdit:function(todo){
+        todo.title= this.beforeEditCache;
+        todo.editing = false;
+    }
   }
 }
 </script>
@@ -67,6 +93,29 @@ export default {
     &:hover{
         color: black;
     }
+}
+.todo-item-left{
+    display: flex;
+    align-items: center;
+}
+.todo-item-label{
+    border:1px solid white;
+    margin-left:12px;
+}
+.todo-item-edit{
+    font-size:22px;
+    color:#2c3e50;
+    margin-left:12px;
+    width:100%;
+    border: 1px solid #ccc;
+    font-family: 'Avenir', Arial, Helvetica, sans-serif;
+    &:focus{
+        outline: none;
+    }
+}
+.completed{
+    text-decoration: line-through;
+    color: grey;
 }
 </style>
 
