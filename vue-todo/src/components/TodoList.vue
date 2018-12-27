@@ -2,16 +2,9 @@
     <div>
         <input type="text" class="todo-input" v-model="newTodo" v-on:keyup.enter="addTodo" placeholder="What needs to be done?"/>
         <transition-group enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-        <div v-for="(todo,index) in todosFiltered" :key="todo.id" class="todo-item">
-            <div class="todo-item-left">
-                <input type="checkbox" v-model="todo.completed">
-                <div v-if="!todo.editing" v-on:dblclick="editTodo(todo)" class="todo-item-label" v-bind:class="{completed : todo.completed}">{{todo.title}}</div>
-                <div v-else><input  class="todo-item-edit" v-focus v-on:blur="doneEdit(todo)"  v-on:keyup.enter="doneEdit(todo)" v-on:keyup.esc="cancelEdit(todo)" type="text" v-model="todo.title"></div>
-            </div>
-            <div class="remove-item" v-on:click="removeTodo(index)">
-                &times;
-            </div>
-        </div>
+        <todo-item v-for="(todo,index) in todosFiltered" :key="todo.id" :todo="todo" :index="index" :checkAll="!anyRemaining" v-on:removedTodo="removeTodo" v-on:finishedEdit="finishedEdit">
+            
+        </todo-item>
         </transition-group>
         <div class="extra-container">
             <div><label for="all"><input v-bind:checked="!anyRemaining" type="checkbox" @change="checkAllTodos"/>Check All</label></div>
@@ -36,8 +29,13 @@
 </template>
 
 <script>
+import TodoItem from './TodoItem'
+
 export default {
   name: 'todo-list',
+  components:{
+      TodoItem
+  },
   data () {
     return {
       newTodo: '',
@@ -50,13 +48,6 @@ export default {
 
       ]
     }
-  },
-  directives:{
-        focus:{
-            inserted:function(el){
-                el.focus();
-            }
-        }
   },
   methods:{
       
@@ -73,29 +64,18 @@ export default {
       removeTodo:function(index){
           this.todos.splice(index,1);
       },
-      editTodo:function(todo){
-          this.beforeEditCache = todo.title;
-          todo.editing= true;
-     },
-     doneEdit(todo){
-        if(todo.title.trim().length == 0){
-            todo.title = this.beforeEditCache;
+      
+        checkAllTodos:function(){
+            this.todos.forEach(todo => {
+                todo.completed=event.target.checked;
+            });
+        },
+        clearCompleted:function(){
+            this.todos = this.todos.filter(todo=>!todo.completed);
+        },
+        finishedEdit:function(data){
+            this.todos.splice(data.index,1,data.todo)
         }
-        todo.editing= false;
-
-    },
-    cancelEdit:function(todo){
-        todo.title= this.beforeEditCache;
-        todo.editing = false;
-    },
-    checkAllTodos:function(){
-        this.todos.forEach(todo => {
-            todo.completed=event.target.checked;
-        });
-    },
-    clearCompleted:function(){
-        this.todos = this.todos.filter(todo=>!todo.completed);
-    }
   },
   computed: {
         remaining:function(){
