@@ -11,7 +11,7 @@ export default {
     },
     methods: {
         clearCompleted:function(){
-            this.$store.state.todos = this.$store.state.todos.filter(todo=>!todo.completed);
+            this.$store.commit('clearCompleted'); 
         }
     },
 }

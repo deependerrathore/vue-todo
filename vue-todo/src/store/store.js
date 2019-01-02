@@ -41,6 +41,30 @@ export const store = new Vuex.Store({
                 completed: todo.completed,
                 editing:todo.editing
             })
+        },
+        clearCompleted(state){
+            state.todos = state.todos.filter(todo=>!todo.completed);
+        },
+        updateFilter(state,filter){
+            state.filter = filter;
+        },
+        checkAll(state,checked){
+            state.todos.forEach(todo => {
+                todo.completed=checked;
+            }); 
+        },
+        deleteTodo(state,id){
+            const index = state.todos.findIndex((item) => item.id == id)
+            state.todos.splice(index,1);
+        },
+        updateTodo(state,todo){
+            const index = state.todos.findIndex((item)=>item.id == todo.id);
+            state.todos.splice(index,1,{
+                'id':todo.id,
+                'title':todo.title,
+                'completed':todo.completed,
+                'editing':todo.editing 
+            })
         }
     }
 })
