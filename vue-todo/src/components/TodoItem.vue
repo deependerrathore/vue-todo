@@ -7,7 +7,7 @@
             </div>
             <div>
                 <button v-on:click="pluralize">Plural</button>
-                <span class="remove-item" v-on:click="removeTodo(index)">
+                <span class="remove-item" v-on:click="removeTodo(todo.id)">
                     &times;
                 </span>
 
@@ -23,10 +23,6 @@ export default {
         todo:{
             type:Object,
             required: true,
-        },
-        index:{
-            type:Number,
-            required:true, 
         },
         checkAll:{
             type:Boolean,
@@ -66,8 +62,9 @@ export default {
         }
     },
     methods:{
-        removeTodo:function(index){
-            eventBus.$emit('removedTodo',index);
+        removeTodo:function(id){
+            const index = this.$store.state.todos.findIndex((item) => item.id == id)
+            this.$store.state.todos.splice(index,1);
         },
         editTodo:function(){
           this.beforeEditCache = this.title;
@@ -78,15 +75,20 @@ export default {
                 this.title = this.beforeEditCache;
             }
             this.editing= false;
-            eventBus.$emit('finishedEdit',{
-                'index':this.index,
-                'todo':{
-                    'id':this.id,
-                    'title':this.title,
-                    'completed':this.completed,
-                    'editing':this.editing
-                }
+            const index = this.$store.state.todos.findIndex((item)=>item.id == this.id);
+            this.$store.state.todos.splice(index,1,{
+                'id':this.id,
+                'title':this.title,
+                'completed':this.completed,
+                'editing':this.editing 
             })
+            // eventBus.$emit('finishedEdit',{
+                
+            //         'id':this.id,
+            //         'title':this.title,
+            //         'completed':this.completed,
+            //         'editing':this.editing
+            // })
 
         },
         cancelEdit:function(){
@@ -98,14 +100,12 @@ export default {
         },
         handlePluraize:function(){
             this.title = this.title +'s';
-            eventBus.$emit('finishedEdit',{
-                'index':this.index,
-                'todo':{
-                    'id':this.id,
-                    'title':this.title,
-                    'completed':this.completed,
-                    'editing':this.editing
-                }
+            const index = this.$store.state.todos.findIndex((item)=>item.id == this.id);
+            this.$store.state.todos.splice(index,1,{
+                'id':this.id,
+                'title':this.title,
+                'completed':this.completed,
+                'editing':this.editing 
             })
         }
     }
