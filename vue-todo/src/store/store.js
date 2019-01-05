@@ -79,9 +79,16 @@ export const store = new Vuex.Store({
             })
         },
         addTodo(context,todo){
-            setTimeout(() => {
-                context.commit('addTodo',todo);
-            },1000);
+            axios.post('/todos',{
+                title: todo.title,
+                completed: false
+            })
+            .then(response => {
+                context.commit('addTodo',response.data)
+            })
+            .catch(error =>{
+                console.log(error);
+            })
         },
         clearCompleted(context){
             setTimeout(() =>{
