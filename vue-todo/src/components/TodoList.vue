@@ -45,12 +45,6 @@ export default {
       newTodo: '',
       idForTodo:3,
       beforeEditCache:'',
-      filter:'all',
-      todos:[
-            {'id':1,'title':'Finish Vue Screencast','completed':false,'editing':false},
-            {'id':2,'title':'Anhilation','completed':false,'editing':false}
-
-      ]
     }
   },
   methods:{
@@ -101,18 +95,12 @@ export default {
       //eventBus.$off('clearCompletedTodos');
   },
   computed: {
-        remaining:function(){
-            return this.$store.getters.remaining;
-        },
         anyRemaining:function(){
             return this.$store.getters.anyRemaining;
         },
         todosFiltered:function(){
             return this.$store.getters.todosFiltered;
         },
-        showClearCompletedButton:function(){
-            return this.$store.getters.showClearCompletedButton;  
-        }
   }
 }
 </script>
