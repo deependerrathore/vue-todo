@@ -1,16 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 Vue.use(Vuex)
+axios.defaults.baseURL = 'http://localhost/todo-laravel/public/api';
 
 export const store = new Vuex.Store({
     state:{
         filter:'all',
-        todos:[
-            {'id':1,'title':'Finish Vue Screencast','completed':false,'editing':false},
-            {'id':2,'title':'Anhilation','completed':false,'editing':false}
-
-        ]
+        todos:[]
     },
     getters:{
         remaining:function(state){
@@ -34,6 +32,9 @@ export const store = new Vuex.Store({
         }
     },
     mutations:{
+        retreiveTodos(state,todos){
+            state.todos = todos;
+        },
         addTodo(state,todo){
             state.todos.push({
                 id: todo.id,
@@ -68,6 +69,15 @@ export const store = new Vuex.Store({
         }
     },
     actions:{
+        retreiveTodos(context){
+            axios.get('/todos')
+            .then(response => {
+                context.commit('retreiveTodos',response.data)
+            })
+            .catch(error =>{
+                console.log(error);
+            })
+        },
         addTodo(context,todo){
             setTimeout(() => {
                 context.commit('addTodo',todo);

@@ -81,11 +81,7 @@ export default {
         // }
   },
   created(){
-    //   eventBus.$on('removedTodo',(id) => this.removeTodo(id));
-    //   eventBus.$on('finishedEdit',(data) => this.finishedEdit(data));
-    //eventBus.$on('checkAllChanged',(checked) => this.checkAllTodos(checked));
-      //eventBus.$on('filterChanged',(filter) => this.$store.state.filter = filter);
-      //eventBus.$on('clearCompletedTodos',() => this.clearCompleted());
+    this.$store.dispatch('retreiveTodos');
   },
   beforeDestroy() {
       //eventBus.$off('removedTodo');
