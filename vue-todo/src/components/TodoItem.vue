@@ -63,7 +63,7 @@ export default {
     },
     methods:{
         removeTodo:function(id){
-            this.$store.commit('deleteTodo',id);
+            this.$store.dispatch('deleteTodo',id);
         },
         editTodo:function(){
           this.beforeEditCache = this.title;
@@ -75,7 +75,7 @@ export default {
             }
             this.editing= false;
                         
-            this.$store.commit('updateTodo',{
+            this.$store.dispatch('updateTodo',{
                 'id':this.id,
                 'title':this.title,
                 'completed':this.completed,
